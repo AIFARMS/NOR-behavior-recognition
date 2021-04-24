@@ -11,8 +11,11 @@ Use the script [extract_frames.py](data/extract_frames.py) to extract and downsa
 Use [statistic.ipynb](data/statistic.ipynb) to truncate clips into a fixed length of either 30 or 60 frames.
 
 ## LRCN 
+Run ``python3 train.py`` to train the model. 
 
-Run ``python3 train.py`` to train the model. Run ``python3 annotate.py`` to annotate the video dataset
+To use pretrained model, download the `cnn-pig.pth` and `rnn-pig.pth` from this [drive](https://drive.google.com/drive/folders/1xx6G0JmaLFX8umIK5iagGJWZa_qAVdn6?usp=sharing) and place in the `models/LRCN/checkpoints` folder
+
+Run ``python3 annotate-folder.py`` to annotate the video dataset
 
 ## C3D
 Download the C3D sports-1m weights using 
