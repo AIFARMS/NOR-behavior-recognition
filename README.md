@@ -7,15 +7,24 @@ Official Implementation of **Vision-based Behavioral Recognition of Novelty Pref
 ## Dataset
 
 Download the dataset and the annotations from [this](https://drive.google.com/drive/folders/14XUYxM15NAI-zBrntrmQofhLv5otAw5b?usp=sharing) drive link and place under the ``data`` folder. 
-Use the script [extract_frames.py](data/extract_frames.py) to pre-process the annotated frames from the dataset.
+Use the script [extract_frames.py](data/extract_frames.py) to extract and downsample the annotated frames from the dataset.
+Use [statistic.ipynb](data/statistic.ipynb) to truncate clips into a fixed length of either 30 or 60 frames.
 
 ## LRCN 
 
 Run ``python3 train.py`` to train the model. Run ``python3 annotate.py`` to annotate the video dataset
 
 ## C3D
+Download the C3D sports-1m weights using 
+```
+cd models/C3D
+wget https://github.com/adamcasson/c3d/releases/download/v0.1/sports1M_weights_tf.h5 -o c3d_sports1m.h5
+```
+Precompute C3D features for the dataset using the script [extract.py](C3D/extract.py). 
 
-Precompute C3D features using the script [extract.py](C3D/extract.py). Run ``python3 train.py`` to train the model. Run ``python3 annotate-folder.py`` to annotate the video dataset.
+Run ``python3 train.py`` to train the model. 
+
+Run ``python3 annotate-folder.py`` to annotate the video dataset.
 
 ## TSM
 
