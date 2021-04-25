@@ -79,36 +79,3 @@ class DecoderRNN(nn.Module):
 
 		return x
 
-class ResnetEncoderPi(nn.Module):
-	def __init__(self, fc1_, fc2_, dropout, CNN_out):
-		## Load the pretrained ResNet-X and replace top fc layer.
-		super(ResnetEncoder, self).__init__()
-
-		self.dropout = dropout
-
-		resnet = models.resnet18(pretrained=True)
-		modules = list(resnet.children())[:-1]      # delete the last fc layer.
-		self.resnet = nn.Sequential(*modules)
-		self.fc1 = nn.Linear(resnet.fc.in_features, fc1_)
-		self.bn1 = nn.BatchNorm1d(fc1_, momentum=0.01)
-		self.fc2 = nn.Linear(fc1_, fc2_)
-		self.bn2 = nn.BatchNorm1d(fc2_, momentum=0.01)
-		self.fc3 = nn.Linear(fc2_, CNN_out)
-		
-	def forward(self, x_2d):
-		cnn_embed_seq = []
-		
-		with torch.no_grad():
-			x = self.resnet(x_2d)  # ResNet
-			x = x.view(x.size(0), -1)             # flatten output of conv
-
-		# FC layers
-		x = self.bn1(self.fc1(x))
-		x = F.relu(x)
-		x = self.bn2(self.fc2(x))
-		x = F.relu(x)
-		x = F.dropout(x, p=self.dropout, training=self.training)
-		x = self.fc3(x)
-
-		return x
-		

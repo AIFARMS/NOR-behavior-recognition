@@ -21,7 +21,7 @@ from utils import labels2cat, create_directory
 from dataset import Dataset_CRNN 
 from model import ResnetEncoder, DecoderRNN
 
-ROOT_DIR = "../data/compressed_action_frames-60-all"    
+ROOT_DIR = "../../data/compressed_action_frames-60"    
 CHECKPOINT_DIR = "checkpoints/"
 create_directory(CHECKPOINT_DIR)
 
@@ -222,8 +222,8 @@ if __name__ == '__main__':
 
 	validate = True
 	if validate:
-		cnn_encoder.load_state_dict(torch.load('../checkpoints-16/cnn_encoder_epoch21.pth'))
-		rnn_decoder.load_state_dict(torch.load('../checkpoints-16/rnn_decoder_epoch21.pth'))
+		cnn_encoder.load_state_dict(torch.load('checkpoints/cnn-pig.pth'))
+		rnn_decoder.load_state_dict(torch.load('checkpoints/rnn-pig.pth'))
 		validation([cnn_encoder, rnn_decoder], device, optimizer, valid_loader)
 		exit()
 

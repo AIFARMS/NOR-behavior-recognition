@@ -4,6 +4,8 @@ from torch.utils import data
 
 from PIL import Image
 
+CLIP_LEN = 60
+
 class Dataset_CRNN(data.Dataset):
 	
 	def __init__(self, data_path, folders, labels, transform=None):
@@ -17,8 +19,8 @@ class Dataset_CRNN(data.Dataset):
 
 	def read_images(self, selected_folder):
 		X = []
-		for i in range(1,61):
-			image = Image.open(os.path.join(self.data_path, selected_folder, '%d.jpg'%i))
+		for i in range(CLIP_LEN):
+			image = Image.open(os.path.join(self.data_path, selected_folder, '%d.jpg'%(i+1)))
 			if self.transform is not None:
 				image = self.transform(image)
 
