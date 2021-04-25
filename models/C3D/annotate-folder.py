@@ -7,6 +7,7 @@ from c3d_detector import C3D_detector
 from feature_extractor import FeatureExtractor
 
 LOG = True
+CLIP_LEN = 60
 
 ## Load C3D feature extractor
 extractor = FeatureExtractor('c3d_sports1m.h5')
@@ -16,7 +17,7 @@ classifier = BinaryClassifier()
 detector = C3D_detector(classifier, checkpoint='checkpoints/model_epoch19.pth')
 
 ## Obtain list of videos
-BASE_DIR = '../data/videos/'
+BASE_DIR = '../../data/videos/'
 video_list = os.listdir(BASE_DIR)
 print("Processing %d videos"%len(video_list))
 
@@ -44,12 +45,12 @@ for video_p in video_list:
 			## Buffer to annotate the original video
 			frame_buffer.append(frame)
 
-			## Collect and predict action for 60 frames
-			if len(frame_buffer) == 60:				
+			## Collect and predict action for CLIP_LEN frames
+			if len(frame_buffer) == CLIP_LEN:				
 				processed_frames = extractor.preprocess_clip_stream(frame_buffer)
 				prediction, score = detector.detect(extractor.extract(processed_frames))
 
-				## Annotate 60 frames and write it out to the output file
+				## Annotate CLIP_LEN frames and write it out to the output file
 				for f in frame_buffer:
 					cv2.putText(f,"%s: %f"%(prediction, score),(30,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv2.LINE_AA)
 					if not LOG:

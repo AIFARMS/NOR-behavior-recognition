@@ -12,6 +12,8 @@ from c3d import C3D
 C3D_MEAN_PATH = 'https://github.com/adamcasson/c3d/releases/download/v0.1/c3d_mean.npy'
 X_CROP, Y_CROP = 350, 30
 
+CLIP_LEN = 30
+
 class FeatureExtractor():
 	
 	def __init__(self, weights_path):
@@ -54,7 +56,12 @@ class FeatureExtractor():
 
 		# Reshape to 128x171
 		reshape_frames = np.zeros((16, 128, 171, 3))
-		frame_ids = [1 + i*3 for i in range(16)]
+
+		if CLIP_LEN == 60:
+			frame_ids = [1 + i*3 for i in range(16)] 
+		else:
+			frame_ids = [i*2 for i in range(15)] + [29] 
+
 		for i, fid in enumerate(frame_ids):
 			img = np.array(frames[fid].resize([171, 128], resample=PIL.Image.BICUBIC))
 			reshape_frames[i, :, :, :] = img
@@ -82,8 +89,8 @@ class FeatureExtractor():
 		Given a path to a clip folder, read in all the frames in the clip using PIL
 		"""
 		frames = []
-		for i in range(1,61):
-			image = Image.open(os.path.join(clip_path, '%d.jpg'%i))
+		for i in range(CLIP_LEN):
+			image = Image.open(os.path.join(clip_path, '%d.jpg'%(i+1)))
 			frames.append(image)
 		return frames
 

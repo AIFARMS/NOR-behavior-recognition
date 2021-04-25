@@ -21,7 +21,7 @@ from utils import labels2cat, create_directory
 from dataset import Dataset_C3D 
 from model import BinaryClassifier
 
-ROOT_DIR = "../data/c3d_features"    
+ROOT_DIR = "../../data/c3d_features"    
 CHECKPOINT_DIR = "checkpoints/"
 create_directory(CHECKPOINT_DIR)
 

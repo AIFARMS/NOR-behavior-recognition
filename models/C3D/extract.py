@@ -8,8 +8,8 @@ def create_dir(dir_name):
 	except:
 		os.mkdir(dir_name)
 
-ROOT_DIR = '../data/compressed_action_frames-60-all'
-FEATURES_DIR = '../data/c3d_features'
+ROOT_DIR = '../../data/compressed_action_frames-30'
+FEATURES_DIR = '../../data/c3d_features'
 create_dir(FEATURES_DIR)
 
 extractor = FeatureExtractor('c3d_sports1m.h5')
