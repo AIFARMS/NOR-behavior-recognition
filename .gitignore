@@ -3,3 +3,6 @@
 *.pth
 *.h5
 *.npy
+*.json
+*.ipynb_checkpoints*
+*.tar
