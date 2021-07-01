@@ -2,6 +2,8 @@
 
 Official Implementation of **Vision-based Behavioral Recognition of Novelty Preference in Pigs**
 
+**Arxiv Paper: https://arxiv.org/abs/2106.12181 ([CVPR2021 CV4Animals Workshop Poster](poster.pdf))**
+
 <img src="data/result.gif" width="800"></img>
 
 ## Dataset
@@ -9,6 +11,13 @@ Official Implementation of **Vision-based Behavioral Recognition of Novelty Pref
 Download the dataset and the annotations from [this](https://drive.google.com/drive/folders/14XUYxM15NAI-zBrntrmQofhLv5otAw5b?usp=sharing) drive link and place under the ``data`` folder. 
 Use the script [extract_frames.py](data/extract_frames.py) to extract and downsample the annotated frames from the dataset.
 Use [statistic.ipynb](data/statistic.ipynb) to truncate clips into a fixed length of either 30 or 60 frames.
+
+## Demo
+Create a directory ``checkpoints`` and place [this](https://drive.google.com/file/d/1760tltQeVDdfr45KCvvXRBgvN-UEHZqa/view?usp=sharing) TSM checkpoint in the ``checkpoints`` folder. Run ``annotate.py`` using the following sample command:
+
+```
+python3 annotate.py -v data/videos/1815_C2_624_4wk.mp4 -c checkpoints/tsm.best.pth.tar -m data/pncl-maskfilter.png -j data/
+```
 
 ## LRCN 
 Run ``python3 train.py`` to train the model. 
