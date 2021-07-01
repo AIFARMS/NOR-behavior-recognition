@@ -113,6 +113,15 @@ def generate_annotations(base_dir, video_path, json_dir='./'):
         with open(json_path, "r") as f:
             annotation_dict = json.load(f)
 
+            annotation_dict["metrics"] = generate_metrics(annotation_dict,
+                                                          annotation_dict["novel_location"], 
+                                                          annotation_dict["start_frame"],
+                                                          fps=120 if ('548' in video_path 
+                                                            or '694' in video_path or '616' in video_path) else 30)
+            # print(video_name, annotation_dict["metrics"])
+            with open(json_path, "w") as f:
+                json.dump(annotation_dict, f, indent=4)
+
     else:
         annotation_dict = {
             "video_name": video_name,
@@ -122,6 +131,9 @@ def generate_annotations(base_dir, video_path, json_dir='./'):
         # Setup reading from video stream
         video_path = os.path.join(base_dir, video_path)
         video_stream = cv2.VideoCapture(video_path)
+        
+        w, h, video_fps = int(video_stream.get(3)), int(video_stream.get(4)), video_stream.get(5)
+        out = cv2.VideoWriter(f"{video_name}-prediction.mp4", cv2.VideoWriter_fourcc(*'mp4v'), video_fps, (w, h))
 
         frame_id, frame_buffer = 0, []
         with torch.no_grad():
@@ -147,22 +159,22 @@ def generate_annotations(base_dir, video_path, json_dir='./'):
                         "confd": score,
                         "location": location
                     }
+
+                    for f in frame_buffer:
+                        cv2.putText(f,"%s %s: %f"%("" if location == "None" else location, prediction, score),
+                            (30,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv2.LINE_AA)
+                        out.write(f)
+
                     # Reset the buffer
                     frame_buffer = []
 
-    annotation_dict["metrics"] = generate_metrics(annotation_dict,
-                                                  annotation_dict["novel_location"], 
-                                                  annotation_dict["start_frame"],
-                                                  fps=120 if ('548' in video_path 
-                                                    or '694' in video_path or '616' in video_path) else 30)
-    # print(video_name, annotation_dict["metrics"])
-    with open(json_path, "w") as f:
-        json.dump(annotation_dict, f, indent=4)
+        out.release()
+        video_stream.release()
 
     return annotation_dict
 
-# if __name__ == '__main__':
-if __name__ == '__not_main__':
+if __name__ == '__main__':
+# if __name__ == '__not_main__':
 
     parser = argparse.ArgumentParser(description="PNCL NOR Action Annotation")
     parser.add_argument('--video_path', '-v', required=True, help="Path to the video to be annotated")
@@ -177,8 +189,8 @@ if __name__ == '__not_main__':
     # Annotate the video
     annotation_dict = generate_annotations('./', args.video_path, args.json_dir)
 
-if __name__ == '__main__':
-# if __name__ == '__not_main__':
+# if __name__ == '__main__':
+if __name__ == '__not_main__':
     import pandas as pd
 
     parser = argparse.ArgumentParser(description="PNCL NOR Action Annotation")
@@ -213,4 +225,4 @@ if __name__ == '__main__':
     
     metrics_df = pd.DataFrame(metrics_df_dict)
     print(metrics_df)
-    metrics_df.to_csv('ai_metrics.csv', index=False)
+    metrics_df.to_csv('analysis/ai_metrics.csv', index=False)
